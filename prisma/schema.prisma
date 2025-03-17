@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Room {
+  id            Int           @id @default(autoincrement())
+  type          RoomType      @map("type")
+  capacity      Int           @map("capacity")
+  view          ViewType      @map("view")
+  pricePerNight Int           @map("price_per_night")
+  reservations  Reservation[]
+
+  @@map("rooms") // Nombre de la tabla en PostgreSQL
+}
+
+model Reservation {
+  id           Int      @id @default(autoincrement())
+  roomId       Int      @map("room_id")
+  room         Room     @relation(fields: [roomId], references: [id])
+  customerName String   @map("customer_name")
+  numGuests    Int      @map("num_guests")
+  checkIn      DateTime @map("check_in")
+  checkOut     DateTime @map("check_out")
+  totalPrice   Int      @map("total_price")
+  allInclusive Boolean  @default(false) @map("all_inclusive")
+
+  @@map("reservations") // Nombre de la tabla en PostgreSQL
+}
+
+enum RoomType {
+  SENCILLA
+  DOBLE
+  PRESIDENCIAL
+}
+
+enum ViewType {
+  EXTERIOR
+  INTERIOR
+}

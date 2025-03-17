@@ -1,0 +1,181 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CLSPricingDetails {
+  """Número total de días de la reserva."""
+  totalDays: Int!
+
+  """Número de días entre semana de la reserva."""
+  weekDays: Int!
+
+  """Número de días de fin de semana de la reserva."""
+  weekendDays: Int!
+
+  """Precio base de la reserva."""
+  basePrice: Int!
+
+  """Incremento de precio por fin de semana."""
+  weekendPriceIncrease: Int!
+
+  """Descuento total aplicado a la reserva."""
+  totalDiscount: Int!
+
+  """Costo total todo incluido."""
+  allInclusiveCost: Int!
+
+  """Precio final después de impuestos y descuentos."""
+  finalPrice: Int!
+}
+
+type CLSRoom {
+  """ID único de la habitación."""
+  id: Int!
+
+  """Tipo de habitación (Sencilla, Doble, Presidencial)."""
+  type: RoomType!
+
+  """Capacidad máxima de huéspedes."""
+  capacity: Int!
+
+  """Vista al exterior o interior."""
+  view: ViewType!
+
+  """Precio base por noche para esta habitación."""
+  pricePerNight: Int!
+}
+
+"""Tipo de habitación (SENCILLA, DOBLE, PRESIDENCIAL)"""
+enum RoomType {
+  SENCILLA
+  DOBLE
+  PRESIDENCIAL
+}
+
+"""Tipo de vista de la habitación (EXTERIOR, INTERIOR)"""
+enum ViewType {
+  EXTERIOR
+  INTERIOR
+}
+
+type CLSRoomGetAvailableRooms {
+  """ID único de la habitación."""
+  id: Int!
+
+  """Tipo de habitación (Sencilla, Doble, Presidencial)."""
+  type: RoomType!
+
+  """Capacidad máxima de huéspedes."""
+  capacity: Int!
+
+  """Vista al exterior o interior."""
+  view: ViewType!
+
+  """Precio base por noche para esta habitación."""
+  pricePerNight: Int!
+
+  """Detalles de costos asociados a la reserva."""
+  pricingDetails: CLSPricingDetails!
+}
+
+type CLSReservation {
+  """ID único de la reserva."""
+  id: Int!
+
+  """Información de la habitación reservada."""
+  room: CLSRoom!
+
+  """ID de la habitación reservada."""
+  roomId: Int!
+
+  """Nombre del cliente que realizó la reserva."""
+  customerName: String!
+
+  """Número de huéspedes."""
+  numGuests: Int!
+
+  """Fecha de check-in."""
+  checkIn: String!
+
+  """Fecha de check-out."""
+  checkOut: String!
+
+  """Indica si la reserva incluye el plan todo incluido."""
+  allInclusive: Boolean!
+}
+
+type CLSReservationWithPricing {
+  """ID único de la reserva."""
+  id: Int!
+
+  """Información de la habitación reservada."""
+  room: CLSRoom!
+
+  """ID de la habitación reservada."""
+  roomId: Int!
+
+  """Nombre del cliente que realizó la reserva."""
+  customerName: String!
+
+  """Número de huéspedes."""
+  numGuests: Int!
+
+  """Fecha de check-in."""
+  checkIn: String!
+
+  """Fecha de check-out."""
+  checkOut: String!
+
+  """Indica si la reserva incluye el plan todo incluido."""
+  allInclusive: Boolean!
+
+  """Detalles de costos asociados a la reserva."""
+  pricingDetails: CLSPricingDetails!
+}
+
+type CLSReservationsGrouped {
+  """Reservas pasadas."""
+  past: [CLSReservation!]!
+
+  """Reservas en curso."""
+  ongoing: [CLSReservation!]!
+
+  """Reservas futuras."""
+  future: [CLSReservation!]!
+}
+
+type Query {
+  """Get all reservations grouped by past, ongoing and future."""
+  getAllReservations: CLSReservationsGrouped!
+
+  """Get a reservation by its ID."""
+  getReservationById(id: Float!): CLSReservationWithPricing!
+
+  """Get all rooms of a specific type"""
+  getTypeRoom(roomType: String!): [CLSRoom!]!
+
+  """Get all available rooms for the given criteria"""
+  getAvailableRooms(checkInDate: DateTime!, checkOutDate: DateTime!, guests: Int!, roomType: String, onlyExteriorView: Boolean, allInclusive: Boolean): [CLSRoomGetAvailableRooms!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  """Crea una nueva reserva"""
+  createReservation(createReservationData: CreateReservationDto!): CLSReservation!
+
+  """Cancela una reserva por su ID"""
+  cancelReservation(id: Float!): CLSReservation!
+}
+
+input CreateReservationDto {
+  checkIn: String!
+  checkOut: String!
+  customerName: String!
+  numGuests: Int!
+  roomType: RoomType!
+  allInclusive: Boolean!
+}
