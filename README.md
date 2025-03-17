@@ -7,28 +7,24 @@ Este proyecto es una API GraphQL para gestionar reservaciones de hotel, utilizan
 Sigue estos pasos para instalar y ejecutar el proyecto:
 
 1. Clona el repositorio:
-
-   ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   cd hotel-reservations
-   ```
+```bash
+git clone https://github.com/vizardkill/hotel-reservations.git
+cd hotel-reservations
+```
 
 2. Instala las dependencias:
-
 ```bash
-   npm install
+npm install
 ```
 
 3. Configura la base de datos Prisma
-
 ```bash
-   npx prisma migrate dev --name init
+npx prisma migrate dev --name init
 ```
 
 4. Inicia el servidor
-
 ```bash
-   npm run start:dev
+npm run start:dev
 ```
 
 5. Abre el Apollo Playground en http://localhost:3000/graphql para probar las queries y mutaciones.
